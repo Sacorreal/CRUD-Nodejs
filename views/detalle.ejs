@@ -1,0 +1,101 @@
+<%- include("template/cabecera", {tituloWeb: "detalle de mascota"}) %>
+
+    <div class="container">
+        <H1 class="text-primary">Detalle Mascota</H1>
+        <% if (error) { %>
+
+            <p>
+                <%= mensaje %>
+
+            </p>
+            <a href="/mascotas" class="btn btn-danger btn btn-block"> Volver a Mascotas</a>
+
+            <% } %>
+
+                <% if (!error) { %>
+
+                    <form id="formularioEditar" data-id="<%= mascota.id %>">
+                        <input type="text" class="form-control my-2" name="nombre" id="nombreInput" value="<%= mascota.nombre %>">
+                        <input type="text" class="form-control my-2" name="descripcion" id="descripcionInput"
+                            value="<%= mascota.descripcion%>">
+                        <button class="btn btn-warning btn-block" type="submit">Editar</button>
+
+                    </form>
+                    <hr>
+                    <button class="btn btn-danger btn-sm my-3" id="btnEliminar" data-id="<%= mascota.id %>">
+                        Eliminar
+                    </button>
+
+                    <% } %>
+
+
+
+
+    </div>
+
+    <%- include("template/footer") %>
+        <!--Este script ejecuta toda la lógica del boton eliminar, se puede crear en la misma vista, para no crear un archivo aparte-->
+        <script>
+            //se captura el elemento por medio de su id
+            const btnEliminar = document.querySelector("#btnEliminar")
+            //se le agrega una función cuando suceda el evento click
+            btnEliminar.addEventListener("click", async () => {
+                //se trae el valor del id y se guarda en la constante id que se capturo cuando se le dio click al botón
+                const id = btnEliminar.dataset.id
+                try {
+                    //se envia por el método "delete" el valor de id por medio de fetch  
+                    const data = await fetch(`/mascotas/${id}`, {
+                        method: "delete"
+                    })
+                    //cuando se envia se obtiene una respuesta en json, que tiene una propiedad estado y valor: true si se pudo eliminar y false si no se pudo eliminar
+                    const res = await data.json()
+
+                    //si estado:true se redirecciona al usuario a la vista de mascotas
+                    if (res.estado) {
+                        window.location.href = "/mascotas"
+                    }
+
+                } catch (e) {
+                    console.log(e)
+
+                }
+
+
+            })
+
+            const formularioEditar = document.querySelector("#formularioEditar")
+            formularioEditar.addEventListener("submit", async (e) => {
+                e.preventDefault()
+                //capturar el valor ingresado en cada campo del formulario
+                const nombre = document.querySelector("#nombreInput").value
+                const descripcion = document.querySelector("#descripcionInput").value
+                const id = formularioEditar.dataset.id
+
+                try {
+                    const data = await fetch(`/mascotas/${id}`, {
+                        method: "put",
+                        headers: {
+                            "Content-type": "application/json"
+
+                        },
+                        //se envia el body por medio de un json 
+                        body: JSON.stringify({nombre, descripcion})
+                    })
+                   const res = await data.json()
+
+                   if (res.estado){
+                    window.location.href = "/mascotas"
+
+                    
+                   }else{
+                    console.log(res) 
+                   }
+
+                } catch (error) {
+                    console.log(error)
+                }
+
+                
+            })
+
+        </script>
