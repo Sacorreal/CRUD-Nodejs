@@ -17,7 +17,6 @@ const mongoose = require("mongoose");
 
 // Se utiliza variables de entorno con el process.env.nombreVariable
 const uri = `mongodb://${process.env.USER}:${process.env.PASSWORD}@ac-dpl9why-shard-00-00.fuv16e1.mongodb.net:27017,ac-dpl9why-shard-00-01.fuv16e1.mongodb.net:27017,ac-dpl9why-shard-00-02.fuv16e1.mongodb.net:27017/${process.env.DBNAME}?ssl=true&replicaSet=atlas-z25b64-shard-0&authSource=admin&retryWrites=true&w=majority`
-//const uri1 = `mongodb+srv://${user}:${password}@cluster0.fuv16e1.mongodb.net/?retryWrites=true&w=majority&ssl=true` ; 
 
 mongoose.set('strictQuery', true)
 
